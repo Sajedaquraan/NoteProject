@@ -5,74 +5,91 @@ import com.example.notesapp.models.Notes;
 import com.example.notesapp.models.Users;
 import com.example.notesapp.repository.NoteRepository;
 import com.example.notesapp.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class NoteService {
-// todo alwayse use constructor injection
-    /* like this code bellow 
-private final NoteRepository noteRepository;
-public NoteService(NoteRepository noteRepository){
-this.noteRepository=noteRepository
-..etc
-}
-    */
-    @Autowired
-    private NoteRepository noteRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-// return entity as response not secure, clean use DTO
-    public List<Notes> getAllNotes() {
-        return noteRepository.findAll();
+    private final NoteRepository noteRepository;
+    private final UserRepository userRepository;
+
+    public NoteService(NoteRepository noteRepository, UserRepository userRepository) {
+        this.noteRepository = noteRepository;
+        this.userRepository = userRepository;
     }
-// return entity as response not secure, clean use DTO
-    public Notes getNoteById(Long id) {
-        return noteRepository.findById(id).orElse(null);
+
+    private NoteDTO convertToDTO(Notes note) {
+        NoteDTO dto = new NoteDTO();
+        dto.setNoteId(note.getNoteId());
+        dto.setUserId(note.getUser().getUserId());
+        dto.setTitle(note.getTitle());
+        dto.setContent(note.getContent());
+        dto.setIsFavorite(note.getIsFavorite());
+        return dto;
     }
-// return entity as response not secure, clean use DTO
-    public Notes createNote(NoteDTO noteDTO) {
+
+    private Notes convertToEntity(NoteDTO dto, Users user) {
+        Notes note = new Notes();
+        note.setNoteId(dto.getNoteId());
+        note.setUser(user);
+        note.setTitle(dto.getTitle());
+        note.setContent(dto.getContent());
+        note.setIsFavorite(dto.getIsFavorite());
+        return note;
+    }
+
+    public List<NoteDTO> getAllNotes() {
+        return noteRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public NoteDTO getNoteById(Long id) {
+        return noteRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElse(null);
+    }
+
+    public NoteDTO createNote(NoteDTO noteDTO) {
         Users user = userRepository.findById(noteDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Notes note = new Notes();
-        note.setUser(user);
-        note.setTitle(noteDTO.getTitle());
-        note.setContent(noteDTO.getContent());
-        note.setIsFavorite(noteDTO.getIsFavorite());
-
-        return noteRepository.save(note);
+        Notes note = convertToEntity(noteDTO, user);
+        Notes savedNote = noteRepository.save(note);
+        return convertToDTO(savedNote);
     }
-// return entity as response not secure, clean use DTO
-    public Notes updateNote(NoteDTO noteDTO) {
-        Notes note = noteRepository.findById(noteDTO.getNoteId())
+
+    public NoteDTO updateNote(NoteDTO noteDTO) {
+        Notes existingNote = noteRepository.findById(noteDTO.getNoteId())
                 .orElseThrow(() -> new RuntimeException("Note not found"));
 
         Users user = userRepository.findById(noteDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        note.setUser(user);
-        note.setTitle(noteDTO.getTitle());
-        note.setContent(noteDTO.getContent());
-        note.setIsFavorite(noteDTO.getIsFavorite());
+        existingNote.setUser(user);
+        existingNote.setTitle(noteDTO.getTitle());
+        existingNote.setContent(noteDTO.getContent());
+        existingNote.setIsFavorite(noteDTO.getIsFavorite());
 
-        return noteRepository.save(note);
+        Notes updatedNote = noteRepository.save(existingNote);
+        return convertToDTO(updatedNote);
     }
 
     public void deleteNoteById(Long id) {
         noteRepository.deleteById(id);
     }
 
-// return entity as response not secure, clean use DTO
-    public List<Notes> getNotesByUserIdentifier(String userIdentifier) {
+    public List<NoteDTO> getNotesByUserIdentifier(String userIdentifier) {
         List<Users> users = userRepository.findByUserIdentifier(userIdentifier);
 
         if (!users.isEmpty()) {
-            return noteRepository.findByUserIn(users);
+            return noteRepository.findByUserIn(users)
+                    .stream()
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
         } else {
             return null;
         }

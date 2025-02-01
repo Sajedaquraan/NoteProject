@@ -11,27 +11,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/note")
 public class NoteController {
-// todo alwayse use constructor injection
-    @Autowired
-    private NoteService noteService;
 
+    private final NoteService noteService;
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
+    }
     @GetMapping
-    public List<Notes> getAllNotes() {
+    public List<NoteDTO> getAllNotes() {
         return noteService.getAllNotes();
     }
 
     @GetMapping("/{id}")
-    public Notes getNoteById(@PathVariable Long id) {
+    public NoteDTO getNoteById(@PathVariable Long id) {
         return noteService.getNoteById(id);
     }
 
     @PostMapping("/create")
-    public Notes createNote(@RequestBody NoteDTO noteDTO) {
+    public NoteDTO createNote(@RequestBody NoteDTO noteDTO) {
         return noteService.createNote(noteDTO);
     }
 
     @PostMapping("/update")
-    public Notes updateNote(@RequestBody NoteDTO noteDTO) {
+    public NoteDTO updateNote(@RequestBody NoteDTO noteDTO) {
         return noteService.updateNote(noteDTO);
     }
 
@@ -41,7 +42,7 @@ public class NoteController {
     }
 
     @GetMapping("/user/{userIdentifier}")
-    public List<Notes> getNotesByUserIdentifier(@PathVariable String userIdentifier) {
+    public List<NoteDTO> getNotesByUserIdentifier(@PathVariable String userIdentifier) {
         return noteService.getNotesByUserIdentifier(userIdentifier);
     }
 }

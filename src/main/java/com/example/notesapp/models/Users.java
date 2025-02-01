@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,12 +20,11 @@ public class Users {
     @Column(nullable = false)
     private String userIdentifier;
 
-
-    public Long getuserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUseruserId(Long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -37,10 +35,4 @@ public class Users {
     public void setUserIdentifier(String userIdentifier) {
         this.userIdentifier = userIdentifier;
     }
-
-
 }
-
-
-
-

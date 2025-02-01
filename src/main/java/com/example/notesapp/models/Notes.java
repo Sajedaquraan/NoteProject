@@ -1,7 +1,6 @@
 package com.example.notesapp.models;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class Notes {
@@ -13,23 +12,9 @@ public class Notes {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    @Column(length = 255)
     private String title;
-
-    @Lob
-    @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    private Boolean isFavorite = false;
-
-//    @Column(nullable = false, updatable = false)
-//    private LocalDateTime createdAt = LocalDateTime.now();
-
-//    @PrePersist
-//    protected void onCreate() {
-//        this.createdAt = LocalDateTime.now();
-//    }
+    private Boolean isFavorite;
 
     // Getters and Setters
     public Long getNoteId() {
@@ -71,10 +56,4 @@ public class Notes {
     public void setIsFavorite(Boolean isFavorite) {
         this.isFavorite = isFavorite;
     }
-
-//    public LocalDateTime getCreatedAt() {
-//        return createdAt;
-//    }
-
-    // No setter for createdAt since it's set once and not updated
 }

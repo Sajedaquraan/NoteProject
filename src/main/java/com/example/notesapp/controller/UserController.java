@@ -1,6 +1,7 @@
 package com.example.notesapp.controller;
 
 import com.example.notesapp.models.Users;
+import com.example.notesapp.services.NoteService;
 import com.example.notesapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/User")
 public class UserController {
-    @Autowired
-    private UserService userService;
 
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
     @GetMapping
     public List<Users> getAllUsers() {
 
