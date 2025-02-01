@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/note")
 public class NoteController {
-
+// todo alwayse use constructor injection
     @Autowired
     private NoteService noteService;
 
