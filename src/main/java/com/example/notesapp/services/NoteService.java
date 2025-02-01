@@ -13,21 +13,28 @@ import java.util.Optional;
 
 @Service
 public class NoteService {
-
+// todo alwayse use constructor injection
+    /* like this code bellow 
+private final NoteRepository noteRepository;
+public NoteService(NoteRepository noteRepository){
+this.noteRepository=noteRepository
+..etc
+}
+    */
     @Autowired
     private NoteRepository noteRepository;
 
     @Autowired
     private UserRepository userRepository;
-
+// return entity as response not secure, clean use DTO
     public List<Notes> getAllNotes() {
         return noteRepository.findAll();
     }
-
+// return entity as response not secure, clean use DTO
     public Notes getNoteById(Long id) {
         return noteRepository.findById(id).orElse(null);
     }
-
+// return entity as response not secure, clean use DTO
     public Notes createNote(NoteDTO noteDTO) {
         Users user = userRepository.findById(noteDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -40,7 +47,7 @@ public class NoteService {
 
         return noteRepository.save(note);
     }
-
+// return entity as response not secure, clean use DTO
     public Notes updateNote(NoteDTO noteDTO) {
         Notes note = noteRepository.findById(noteDTO.getNoteId())
                 .orElseThrow(() -> new RuntimeException("Note not found"));
@@ -60,7 +67,7 @@ public class NoteService {
         noteRepository.deleteById(id);
     }
 
-
+// return entity as response not secure, clean use DTO
     public List<Notes> getNotesByUserIdentifier(String userIdentifier) {
         List<Users> users = userRepository.findByUserIdentifier(userIdentifier);
 
