@@ -21,10 +21,6 @@ public class Users {
     @Column(nullable = false)
     private String userIdentifier;
 
-//
-//    @Column(nullable = false, updatable = false)
-//    private LocalDateTime createdAt = LocalDateTime.now();
-
 
     public Long getuserId() {
         return userId;

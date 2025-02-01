@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface NoteRepository extends JpaRepository<Notes, Long> {
-    List<Notes> findByUserIn(List<Users> users);  // Use findByUserIn to find notes for multiple users
+    List<Notes> findByUserIn(List<Users> users);
 
 }

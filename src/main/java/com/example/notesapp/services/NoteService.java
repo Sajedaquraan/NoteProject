@@ -62,14 +62,11 @@ public class NoteService {
 
 
     public List<Notes> getNotesByUserIdentifier(String userIdentifier) {
-        // Find users by userIdentifier (returns a list of users)
         List<Users> users = userRepository.findByUserIdentifier(userIdentifier);
 
         if (!users.isEmpty()) {
-            // Return all notes for all matching users
-            return noteRepository.findByUserIn(users);  // findByUserIn for a list of users
+            return noteRepository.findByUserIn(users);
         } else {
-            // Handle case where no user is found (optional)
             return null;
         }
     }

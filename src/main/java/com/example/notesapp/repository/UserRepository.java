@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<Users, Long> {
 
-    List<Users> findByUserIdentifier(String userIdentifier);  // Change to return a List
+    List<Users> findByUserIdentifier(String userIdentifier);
 }

@@ -42,6 +42,6 @@ public class NoteController {
 
     @GetMapping("/user/{userIdentifier}")
     public List<Notes> getNotesByUserIdentifier(@PathVariable String userIdentifier) {
-        return noteService.getNotesByUserIdentifier(userIdentifier);  // Call the correct service method
+        return noteService.getNotesByUserIdentifier(userIdentifier);
     }
 }
